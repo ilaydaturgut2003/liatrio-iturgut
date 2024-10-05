@@ -48,6 +48,12 @@ jobs:
             sleep 2
           done
 
+      - name: Check Docker container status
+        run: docker ps
+
+      - name: Get Docker container logs
+        run: docker logs my-app
+
       - name: Run tests
         uses: liatrio/github-actions/apprentice-action@master
 
@@ -62,7 +68,7 @@ jobs:
         run: |
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws configure set default.region us-west-2
+          aws configure set default.region us-west-1
           eb init -p docker liatrio-iturgut --region us-west-1
           eb create liatrio-iturgut-ev
           eb deploy
