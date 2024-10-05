@@ -35,7 +35,7 @@ jobs:
 
       - name: Run Docker container
         run: |
-          docker run -d -p 80:80 --name my-app 2003ilaydaturgut3155/liatrio-iturgut:latest
+          docker run -d -p 80:80 --name silly_sutherland 2003ilaydaturgut3155/liatrio-iturgut:latest
 
       - name: Wait for the app to be available
         run: |
