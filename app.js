@@ -10,6 +10,7 @@ app.get('/', (req, res) => {
   res.json(response);
 });
 
+const PORT = process.env.PORT || 80;
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });

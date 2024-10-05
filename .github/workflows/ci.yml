@@ -33,6 +33,21 @@ jobs:
       - name: Push Docker image
         run: docker push 2003ilaydaturgut3155/liatrio-iturgut:latest
 
+      - name: Run Docker container
+        run: |
+          docker run -d -p 80:80 --name my-app 2003ilaydaturgut3155/liatrio-iturgut:latest
+
+      - name: Wait for the app to be available
+        run: |
+          for i in {1..30}; do
+            if curl -s http://localhost:80; then
+              echo "App is up!"
+              break
+            fi
+            echo "Waiting for the app to be ready..."
+            sleep 2
+          done
+
       - name: Run tests
         uses: liatrio/github-actions/apprentice-action@master
 
