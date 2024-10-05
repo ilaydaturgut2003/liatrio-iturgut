@@ -52,7 +52,7 @@ jobs:
         run: docker ps
 
       - name: Get Docker container logs
-        run: docker logs my-app
+        run: docker logs silly_sutherland
 
       - name: Run tests
         uses: liatrio/github-actions/apprentice-action@master

@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  app:
+    image: 2003ilaydaturgut3155/liatrio-iturgut
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
