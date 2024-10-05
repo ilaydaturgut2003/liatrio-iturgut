@@ -7,7 +7,10 @@ app.get('/', (req, res) => {
     message: "My name is Ilayda Turgut",
     timestamp: Date.now()
   };
-  res.json(response);
+
+  // minified JSON response
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify(response)); 
 });
 
 const PORT = process.env.PORT || 80;
