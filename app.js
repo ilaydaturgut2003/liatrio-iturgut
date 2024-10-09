@@ -2,15 +2,15 @@ const express = require('express');
 const app = express();
 const port = 80;
 
+app.set('json spaces', 0);
+
 app.get('/', (req, res) => {
   const response = {
     message: "My name is Ilayda Turgut",
     timestamp: Date.now()
   };
-
-  // minified JSON response
-  res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify(response)); 
+  const minifiedJson = JSON.stringify(response);
+  res.send(minifiedJson);
 });
 
 const PORT = process.env.PORT || 80;
