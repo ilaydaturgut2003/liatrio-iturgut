@@ -43,25 +43,9 @@ jobs:
         run: |
           docker run -d -p 80:80 --name silly_sutherland 2003ilaydaturgut3155/liatrio-iturgut:latest
 
-      - name: Wait for the app to be available
-        run: |
-          for i in {1..30}; do
-            if curl -s http://localhost:80; then
-              echo "App is up!"
-              break
-            fi
-            echo "Waiting for the app to be ready..."
-            sleep 2
-          done
-
-      - name: Check Docker container status
-        run: docker ps
-
-      - name: Get Docker container logs
-        run: docker logs silly_sutherland
-
-      - name: Run tests
-        uses: liatrio/github-actions/apprentice-action@master
+      # third party action
+      - name: Use Liatrio Action for Endpoint Tests
+        uses: liatrio/github-actions/apprentice-action@v1.0.0 #changed reference from master to v1.0.0
 
   deploy:
     needs: build
