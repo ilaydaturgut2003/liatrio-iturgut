@@ -40,8 +40,7 @@ jobs:
         run: docker push 2003ilaydaturgut3155/liatrio-iturgut:latest
 
       - name: Run Docker container
-        run: |
-          docker run -d -p 80:80 --name silly_sutherland 2003ilaydaturgut3155/liatrio-iturgut:latest
+        run: docker run -d -p 80:80 --name silly_sutherland 2003ilaydaturgut3155/liatrio-iturgut:latest
 
       # third party action
       - name: Use Liatrio Action for Endpoint Tests
@@ -52,13 +51,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2 
+        with: 
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} 
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
+          aws-region: us-west-1
+
+      - name: Log in to Amazon ECR 
+        uses: aws-actions/amazon-ecr-login@v2 
+
+      - name: Build and push Docker image 
+        run: | 
+          docker build -t ${{ secrets.ECR_REGISTRY }}:latest -f Dockerfile . 
+          docker push ${{ secrets.ECR_REGISTRY }}:latest 
 
       - name: Deploy to AWS Elastic Beanstalk
         run: |
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws configure set default.region us-west-1
-          eb init -p docker liatrio-iturgut --region us-west-1
-          eb create liatrio-iturgut-ev
-          eb deploy
+          eb init -p docker silly-sutherland --region us-west-1
+          eb deploy liatrio-iturgut-env
