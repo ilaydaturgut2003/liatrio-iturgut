@@ -37,10 +37,10 @@ jobs:
         run: docker build -t liatrio-iturgut .
 
       - name: Push Docker image
-        run: docker push liatrio-iturgut:latest
+        run: docker push 2003ilaydaturgut3155/liatrio-iturgut:latest
 
       - name: Run Docker container
-        run: docker run -d -p 80:80 --name liatrio-dockerapp liatrio-iturgut:latest
+        run: docker run -d -p 80:80 --name liatrio-dockerapp 2003ilaydaturgut3155/liatrio-iturgut:latest
 
       # third party action
       - name: Use Liatrio Action for Endpoint Tests
