@@ -34,13 +34,13 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t 2003ilaydaturgut3155/liatrio-iturgut .
+        run: docker build -t liatrio-iturgut .
 
       - name: Push Docker image
-        run: docker push 2003ilaydaturgut3155/liatrio-iturgut:latest
+        run: docker push liatrio-iturgut:latest
 
       - name: Run Docker container
-        run: docker run -d -p 80:80 --name silly_sutherland 2003ilaydaturgut3155/liatrio-iturgut:latest
+        run: docker run -d -p 80:80 --name liatrio-dockerapp liatrio-iturgut:latest
 
       # third party action
       - name: Use Liatrio Action for Endpoint Tests
@@ -61,7 +61,7 @@ jobs:
         with: 
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} 
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
-          aws-region: us-west-1
+          aws-region: us-west-2
 
       - name: Log in to Amazon ECR 
         uses: aws-actions/amazon-ecr-login@v2 
@@ -70,8 +70,3 @@ jobs:
         run: | 
           docker build -t ${{ secrets.ECR_REGISTRY }}:latest -f Dockerfile . 
           docker push ${{ secrets.ECR_REGISTRY }}:latest 
-
-      - name: Deploy to AWS Elastic Beanstalk
-        run: |
-          eb init -p docker silly-sutherland --region us-west-1
-          eb deploy liatrio-iturgut-env
