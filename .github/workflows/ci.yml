@@ -56,7 +56,7 @@ jobs:
         run: docker push 2003ilaydaturgut3155/liatrio-iturgut:latest
 
       - name: Push Docker image to ECR
-        run: docker push ${{ secrets.ECR_REGISTRY }}latest
+        run: docker push ${{ secrets.ECR_REGISTRY }}:latest
 
       - name: Run Docker container
         run: docker run -d -p 80:80 --name liatrio-dockerapp 2003ilaydaturgut3155/liatrio-iturgut:latest
