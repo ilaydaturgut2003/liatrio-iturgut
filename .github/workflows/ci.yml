@@ -33,7 +33,15 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2 
+        with: 
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} 
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
+          aws-region: us-west-2
+
       - name: Log in to Amazon ECR 
+        id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2 
 
       - name: Build Docker image
@@ -66,13 +74,6 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2 
-        with: 
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} 
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
-          aws-region: us-west-2
 
       #- name: Build and push Docker image 
         #run: | 
