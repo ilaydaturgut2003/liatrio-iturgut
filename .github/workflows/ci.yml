@@ -75,14 +75,15 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      #- name: Build and push Docker image 
-        #run: | 
-          #docker build -t ${{ secrets.ECR_REGISTRY }}:latest -f Dockerfile . 
-          #docker push ${{ secrets.ECR_REGISTRY }}:latest 
-
       - name: Update AWS App Runner service
         run: |
           aws apprunner update-service \
             --service-arn arn:aws:apprunner:us-west-2:296062563852:service/liatrio-service/80834f31f0454317a5552b72a4790101 \
-            --source-configuration ImageRepositoryType=ECR \
-            --image-repository ImageIdentifier=${{ secrets.ECR_REGISTRY }}:latest,ImageConfiguration={Port=80}
+            --source-configuration '{
+              "ImageRepository": {
+                "ImageIdentifier": "${{ secrets.ECR_REGISTRY }}:latest",
+                "ImageConfiguration": {
+                  "Port": "80"
+                }
+              }
+            }'
