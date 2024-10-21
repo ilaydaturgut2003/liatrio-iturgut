@@ -1,5 +1,0 @@
-branch-defaults:
-  main:
-    environment: liatrio-iturgut-env
-global:
-  profile: eb-cli

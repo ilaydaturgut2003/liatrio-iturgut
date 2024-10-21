@@ -12,7 +12,7 @@ permissions:
   packages: write
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -42,7 +42,14 @@ jobs:
 
       - name: Log in to Amazon ECR 
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2 
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # third party action
+      - name: Use Liatrio Action for Endpoint Tests
+        uses: liatrio/github-actions/apprentice-action@v1.0.0 #changed reference from master to v1.0.0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
       - name: Build Docker image
         run: docker build -t liatrio-iturgut .
@@ -57,33 +64,3 @@ jobs:
 
       - name: Push Docker image to ECR
         run: docker push ${{ secrets.ECR_REGISTRY }}:latest
-
-      - name: Run Docker container
-        run: docker run -d -p 80:80 --name liatrio-dockerapp 2003ilaydaturgut3155/liatrio-iturgut:latest
-
-      # third party action
-      - name: Use Liatrio Action for Endpoint Tests
-        uses: liatrio/github-actions/apprentice-action@v1.0.0 #changed reference from master to v1.0.0
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Update AWS App Runner service
-        run: |
-          aws apprunner update-service \
-            --service-arn arn:aws:apprunner:us-west-2:296062563852:service/liatrio-service/80834f31f0454317a5552b72a4790101 \
-            --source-configuration '{
-              "ImageRepository": {
-                "ImageIdentifier": "${{ secrets.ECR_REGISTRY }}:latest",
-                "ImageConfiguration": {
-                  "Port": "80"
-                }
-              }
-            }'
