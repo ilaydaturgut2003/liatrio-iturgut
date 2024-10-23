@@ -8,7 +8,8 @@ app.get('/', (req, res) => {
   const response = {
     message: "My name is Ilayda Turgut",
     timestamp: Date.now(),
-    automatedDeployment: "success"
+    automatedDeployment: "success",
+    message1: "Hello World"
   };
   //const minifiedJson = JSON.stringify(response);
   //res.send(minifiedJson);

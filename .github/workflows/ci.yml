@@ -1,10 +1,12 @@
 name: CI/CD Pipeline
 
+#triggers during push to main 
 on:
   push:
     branches:
       - main
 
+#control access for the job      
 permissions:
   contents: read
   actions: read
@@ -16,17 +18,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      #pulls latest version of code from repo
       - name: Checkout code
         uses: actions/checkout@v3
 
+      #installs Node.js version 18, sets up env for app
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
+      #installs Node.js dependencies
       - name: Install dependencies
         run: npm install
 
+      #configure credentials
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -44,19 +50,23 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
+      #used for building docker images
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      #builds Docker image
       - name: Build Docker image
         run: docker build -t liatrio-iturgut .
 
+      # run before tests to ensure port 80 is used
       - name: Run Docker container
         run: docker run -d -p 80:80 --name liatrio-dockerapp 2003ilaydaturgut3155/liatrio-iturgut:latest
 
-      # third party action
+      # third party action to test app's endpoint
       - name: Use Liatrio Action for Endpoint Tests
         uses: liatrio/github-actions/apprentice-action@v1.0.0 #changed reference from master to v1.0.0
 
+      #tags Docker image to be properly versioned and stored
       - name: Tag Docker image for Docker Hub and ECR
         run: |
           docker tag liatrio-iturgut:latest 2003ilaydaturgut3155/liatrio-iturgut:latest
@@ -65,5 +75,6 @@ jobs:
       - name: Push Docker image to Docker Hub
         run: docker push 2003ilaydaturgut3155/liatrio-iturgut:latest
 
+      #pushes image to ECR, which stores it for the deployment process
       - name: Push Docker image to ECR
         run: docker push ${{ secrets.ECR_REGISTRY }}:latest
